@@ -1,0 +1,3 @@
+<?php
+
+class E_NAME extends Exception {}

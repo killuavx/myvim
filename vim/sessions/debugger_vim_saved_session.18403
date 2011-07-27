@@ -1,0 +1,123 @@
+let SessionLoad = 1
+if &cp | set nocp | endif
+let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
+let v:this_session=expand("<sfile>:p")
+silent only
+cd /usr/local/share/nginx/www/market2/protected/modules/mobile2/models
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+set shortmess=aoO
+badd +1344 Api.php
+badd +15 /usr/local/share/nginx/www/market2/protected/modules/mobile2/controllers/ApiController.php
+badd +1 /usr/local/share/nginx/www/market2/index-dev.php
+badd +50 /usr/local/share/nginx/www/market2/protected/modules/mobile2/components/Protocol.php
+badd +119 /usr/local/share/nginx/www/market2/protected/config/params.php
+badd +1 /usr/local/share/nginx/www/market2/protected/config/permission_ch.php
+silent! argdel *
+set lines=71 columns=274
+edit Api.php
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=syntax
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=1
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+3
+normal zo
+1326
+normal zc
+1537
+normal zo
+1794
+normal zo
+3
+normal zo
+let s:l = 1612 - ((17 * winheight(0) + 33) / 66)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1612
+normal! 03l
+tabedit /usr/local/share/nginx/www/market2/protected/modules/mobile2/controllers/ApiController.php
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=syntax
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=1
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+2
+normal zo
+4
+normal zo
+2
+normal zo
+let s:l = 15 - ((14 * winheight(0) + 33) / 66)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+15
+normal! 0
+tabedit /usr/local/share/nginx/www/market2/protected/modules/mobile2/controllers/ApiController.php
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=syntax
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=1
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+2
+normal zo
+4
+normal zo
+2
+normal zo
+let s:l = 15 - ((14 * winheight(0) + 33) / 66)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+15
+normal! 0
+tabnew
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+tabnext 1
+if exists('s:wipebuf')
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20 shortmess=filnxtToO
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if file_readable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &so = s:so_save | let &siso = s:siso_save
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :

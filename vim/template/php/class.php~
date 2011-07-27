@@ -1,0 +1,15 @@
+<?php
+
+class C_NAME {
+    
+    function __construct(){
+        
+    }
+
+    function __destruct(){
+        
+    }
+}
+
+/* End of file: C_NAME */
+/* Location: C_NAME */

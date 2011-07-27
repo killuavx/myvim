@@ -1,0 +1,88 @@
+let SessionLoad = 1
+if &cp | set nocp | endif
+let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
+let v:this_session=expand("<sfile>:p")
+silent only
+cd /usr/local/share/nginx/www/market2/protected/modules/admin/controllers
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+set shortmess=aoO
+badd +35 /usr/local/share/nginx/www/market2/protected/modules/clients/controllers/CallbackController.php
+badd +59 /usr/local/share/nginx/www/market2/protected/modules/mobile2/controllers/ApiController.php
+badd +1389 /usr/local/share/nginx/www/market2/protected/modules/mobile2/models/Api.php
+badd +9 /usr/local/share/nginx/www/market2/protected/modules/mobile2/models/TRACE_WINDOW
+badd +1 /usr/local/share/nginx/www/market2/index-dev.php
+badd +48 /usr/local/share/nginx/www/market2/protected/modules/mobile2/components/Protocol.php
+badd +410 /usr/local/share/nginx/www/yii/framework/web/helpers/CHtml.php
+badd +1 /usr/local/share/nginx/www/yii/framework/YiiBase.php
+badd +16 /usr/local/share/nginx/www/market2/protected/components/UserIdentity.php
+badd +43 /usr/local/share/nginx/www/yii/framework/web/auth/CUserIdentity.php
+badd +125 /usr/local/share/nginx/www/yii/framework/web/auth/CBaseUserIdentity.php
+badd +9 /usr/local/share/nginx/www/market2/client/lib/uccode.class.php
+badd +81 /usr/local/share/nginx/www/market2/protected/components/UCenter.php
+badd +13 /usr/local/share/nginx/www/market2/protected/components/observer/ApkHandler.php
+badd +2 /usr/local/share/nginx/www/market2/protected/components/observer/IObserver.php
+badd +1 /usr/local/share/nginx/www/market2/protected/components/observer/ObserverBroker.php
+badd +73 /usr/local/share/nginx/www/market2/protected/config/prod.php
+badd +21 /usr/local/share/nginx/www/market2/protected/config/main.php
+badd +164 /usr/local/share/nginx/www/market2/protected/components/WebUser.php
+badd +62 /usr/local/share/nginx/www/yii/framework/web/auth/CWebUser.php
+badd +25 /usr/local/share/nginx/www/market2/protected/modules/admin/components/AdminController.php
+badd +2 /usr/local/share/nginx/www/market2/protected/yiic
+badd +0 /usr/local/share/nginx/www/market2/protected/models/User.php
+badd +0 /usr/local/share/nginx/www/market2/protected/models/PcClientLog.php
+badd +26 /usr/local/share/nginx/www/market2/protected/modules/web/components/WebLoginForm.php
+badd +34 /usr/local/share/nginx/www/market2/protected/modules/web/controllers/UserController.php
+badd +210 AuthorizationController.php
+badd +18 /usr/local/share/nginx/www/market2/protected/modules/mobile2/controllers/DefaultController.php
+badd +199 /usr/local/share/nginx/www/market2/protected/models/Commenting.php
+badd +199 /usr/local/share/nginx/www/market2/protected/modules/web/controllers/CommentingController.php
+badd +0 CommentController.php
+silent! argdel *
+set lines=70 columns=274
+edit CommentController.php
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=syntax
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=1
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+2
+normal zo
+51
+normal zc
+80
+normal zc
+101
+normal zc
+2
+normal zo
+let s:l = 217 - ((216 * winheight(0) + 33) / 66)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+217
+normal! 0
+tabnext 1
+if exists('s:wipebuf')
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=1 shortmess=filnxtToO
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if file_readable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &so = s:so_save | let &siso = s:siso_save
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :

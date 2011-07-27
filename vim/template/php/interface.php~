@@ -1,0 +1,5 @@
+<?php
+
+interface IF_NAME {
+    
+}

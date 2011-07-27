@@ -1,0 +1,129 @@
+let SessionLoad = 1
+if &cp | set nocp | endif
+let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
+let v:this_session=expand("<sfile>:p")
+silent only
+cd /usr/local/share/nginx/www/market2/protected/modules/clients/components/transaction
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+set shortmess=aoO
+badd +37 /usr/local/share/nginx/www/market2/protected/modules/clients/components/vibo/active/Vibo_Active_Download.php
+badd +26 /usr/local/share/nginx/www/market2/protected/tests/unit/vibo/active/DownloadTestCase.php
+badd +849 bash\ -\ 1
+badd +41 /usr/local/share/nginx/www/market2/protected/tests/unit/vibo/active/DownloadWriteTestCase.php
+badd +37 /usr/local/share/nginx/www/market2/protected/modules/clients/components/vibo/Vibo_Helper.php
+badd +30 /usr/local/share/nginx/www/market2/protected/tests/unit/vibo/active/GetTestCase.php
+badd +39 /usr/local/share/nginx/www/market2/protected/modules/clients/components/vibo/Vibo_Handle.php
+badd +96 /usr/local/share/nginx/www/market2/protected/modules/clients/controllers/CallbackController.php
+badd +70 ProtoApiTransaction.php
+badd +43 /usr/local/share/nginx/www/market2/protected/modules/clients/components/vibo/Vibo_Active.php
+badd +151 DownloadSoftTransaction.php
+badd +126 DownloadStreamTransaction.php
+badd +116 /usr/local/share/nginx/www/market2/protected/config/routing.php
+badd +1 /usr/local/share/nginx/www/market2/protected/tests/unit/vibo/ViboTestCase.php
+badd +23 bash\ -\ 2
+badd +1 bash\ \ -\ 1
+badd +0 bash\ -\ 1
+silent! argdel *
+set lines=70 columns=274
+edit DownloadStreamTransaction.php
+set splitbelow splitright
+wincmd _ | wincmd |
+vsplit
+1wincmd h
+wincmd w
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+wincmd =
+argglobal
+setlocal fdm=syntax
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=1
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+7
+normal zo
+39
+normal zo
+61
+normal zc
+7
+normal zo
+let s:l = 33 - ((32 * winheight(0) + 32) / 65)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+33
+normal! 0
+wincmd w
+argglobal
+edit DownloadSoftTransaction.php
+setlocal fdm=syntax
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=1
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+8
+normal zo
+8
+normal zo
+let s:l = 154 - ((153 * winheight(0) + 32) / 65)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+154
+normal! 045l
+wincmd w
+2wincmd w
+wincmd =
+tabedit /usr/local/share/nginx/www/market2/protected/tests/unit/vibo/active/DownloadTestCase.php
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=syntax
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=1
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+42
+normal zo
+42
+normal zo
+42
+normal zo
+let s:l = 36 - ((35 * winheight(0) + 32) / 65)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+36
+normal! 063l
+2wincmd w
+tabnext 1
+if exists('s:wipebuf')
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20 shortmess=filnxtToO
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if file_readable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &so = s:so_save | let &siso = s:siso_save
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :
