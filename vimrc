@@ -4,10 +4,11 @@ set showcmd
 syntax on
 
 "检测文件类型
-filetype on 
+"filetype on 
 "检查文件类型 载入对应的ftplugin vim脚本
-filetype indent on
-filetype plugin on
+"filetype indent on
+"filetype plugin on
+filetype plugin indent on
 
 set number
 set autoindent
@@ -56,8 +57,7 @@ set nowritebackup
 set nowrap 
 "设置超过120字符自动换行 
 "set textwidth=120 
-"设置超过100列的字符带下划线 
-"au BufWinEnter * let w:m2=matchadd('Underlined', '\%>120v.\+', -1) 
+"设置超过100列的字符带下划线 "au BufWinEnter * let w:m2=matchadd('Underlined', '\%>120v.\+', -1) 
 "syn match out80 /\%80v./ containedin=ALL 
 "hi out80 guifg=white guibg=red 
 
@@ -107,8 +107,6 @@ source $VIMRUNTIME/menu.vim
 " 针对Windows的字体配置
 "set guifont=Courier\ New:h10:cANSI
 au GUIEnter * simalt ~x "最大化窗口
-
-set guifont=Monaco\ 9
 
 
 "标签页只显示文件名
@@ -202,11 +200,6 @@ nmap <silent> <F8> :WMToggle<cr>
 
 
 
-"colo tir_black
-"colo impact
-"colo lucius
-"colo xoria256
-
 lef loaded_nerd_comments=1
 
 
@@ -235,9 +228,6 @@ endfunction
 "F7 察看svn版本比较
 nmap <silent> <c-F7> :call FlwSvnDiffToggle()<CR>
 nmap <silent> g<c-F7> :new __SVN_DIFF__ <CR>:read !svn diff<CR>:set syntax=diff buftype=nofile<CR>gg
-
-
-filetype plugin indent on
 
 
 let g:use_zen_complete_tag=1
@@ -287,5 +277,17 @@ let g:acp_enableAtStartup = 0
 au BufRead,BufNewFile /etc/nginx/* set ft=nginx
 
 let php_folding=1
-autocmd FileType php setl fdm=syntax | setl fen 
+"let php_folding=1
+"autocmd FileType php setl fdm=syntax | setl fen 
 let g:debuggerPort=9001
+
+"colorscheme Mustang_Vim_Colorscheme_by_hcalves
+"colo wombat
+"colo jellybeans
+"colo desertEx
+"colo tir_black
+"colo lucius
+"colo xoria256
+
+set guifont=Monaco\ 9
+

@@ -1,7 +1,6 @@
 autocmd BufNewFile,Bufread *.inc,*.php set keywordprg="help"
 
 "exec 'set runtimepath+=~/.vim/ftplugin/php'
-let php_folding=1
 autocmd FileType php setl fdm=syntax | setl fen 
 autocmd FileType php set omnifunc=phpcomplete
 
@@ -25,3 +24,20 @@ let g:debuggerMaxDepth=3
 
 " for PHP ctags
 "set tags+=$HOME/.vim/ftplugin/php/doc"
+"
+
+function! RunPhpcs()
+  let l:filename=@%
+  "let l:phpcs_output=system('phpcs --report=csv --standard=YMC '.l:filename)
+  let l:phpcs_output=system('phpcs --report=csv '.l:filename)
+  echo l:phpcs_output
+  let l:phpcs_list=split(l:phpcs_output, "\n")
+  unlet l:phpcs_list[0]
+  cexpr l:phpcs_list
+  cwindow
+endfunction
+set errorformat+=\"%f\"\\,%l\\,%c\\,%t%*[a-zA-Z]\\,\"%m\"
+
+"autocmd BufWritePost *.php call RunPhpcs()
+command! Phpcs execute RunPhpcs()
+
