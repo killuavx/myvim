@@ -89,6 +89,7 @@ set foldmethod=marker
 "=======================================
 " 折叠模式结束
 
+set magic
 
 " User defined
 " ================
@@ -245,6 +246,8 @@ endif
 "在终端和gui下使用鼠标
 set mouse=a
 
+"set listchars=tab:\|\ ,trail:.,extends:>,precedes:<
+set listchars=extends:>,precedes:<
 "显示尾行标示
 set list
 "显示尾行空格

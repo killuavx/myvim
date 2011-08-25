@@ -1,5 +1,3 @@
-autocmd BufNewFile,Bufread *.inc,*.php set keywordprg="help"
-
 "exec 'set runtimepath+=~/.vim/ftplugin/php'
 autocmd FileType php setl fdm=syntax | setl fen 
 autocmd FileType php set omnifunc=phpcomplete
@@ -24,7 +22,9 @@ let g:debuggerMaxDepth=3
 
 " for PHP ctags
 "set tags+=$HOME/.vim/ftplugin/php/doc"
-"
+set tags+=$HOME/.vim/ftplugin/php/doc/php-manual
+set runtimepath+=$HOME/.vim/ftplugin/php/doc/php-manual
+autocmd BufNewFile,Bufread *.module,*.inc,*.php set keywordprg="help"
 
 function! RunPhpcs()
   let l:filename=@%
