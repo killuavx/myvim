@@ -294,3 +294,7 @@ let g:debuggerPort=9001
 
 set guifont=Monaco\ 9
 
+autocmd BufNewFile,Bufread *.module,*.inc,*.php set keywordprg="help"
+
+"插入模式下打印当前时间
+ino <C-E><C-D> <C-R>=strftime('%Y-%m-%d %H:%M:%S')<CR>

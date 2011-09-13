@@ -22,9 +22,8 @@ let g:debuggerMaxDepth=3
 
 " for PHP ctags
 "set tags+=$HOME/.vim/ftplugin/php/doc"
-set tags+=$HOME/.vim/ftplugin/php/doc/php-manual
-set runtimepath+=$HOME/.vim/ftplugin/php/doc/php-manual
-autocmd BufNewFile,Bufread *.module,*.inc,*.php set keywordprg="help"
+"set tags+=$HOME/.vim/ftplugin/php/doc/php-manual/tags
+"set runtimepath+=$HOME/.vim/ftplugin/php/doc/php-manual
 
 function! RunPhpcs()
   let l:filename=@%
