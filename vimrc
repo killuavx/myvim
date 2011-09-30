@@ -13,34 +13,27 @@ filetype plugin indent on
 set number
 set autoindent
 
-set tabstop=2 "空格数量为4
-set shiftwidth=2 "自动缩进为4
-"set softtabstop=2
-set expandtab "使用空格代替Tab
-"设置匹配模式， 类似当输入一个左括号时匹配右括号
-set showmatch
-"智能对齐方式 
-set smartindent
+set tabstop=2     " 空格数量为4
+set shiftwidth=2  " 自动缩进为4
+set softtabstop=2 " 退格删除2空格
+set expandtab     " 使用空格代替Tab
+                  " set smartindent          " 智能对齐方式
+set showmatch     " 设置匹配模式， 类似当输入一个左括号时匹配右括号
 
-"Add more information on status bar
 set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v]\ [%p%%]\ [LEN=%L]
-"Always show the status line
-set laststatus=2
+                  "Add more information on status bar
+set laststatus=2  "Always show the status line
 
-" case insensitive search
-set ignorecase
+set ignorecase " case insensitive search
 set smartcase
 
 "Session settings
 set sessionoptions=resize,winpos,winsize,buffers,tabpages,folds,curdir,help
 
-"去除vim的GUI版本中的toolbar
-set guioptions-=T
+set guioptions-=T "去除vim的GUI版本中的toolbar
 
-"高亮搜索
-set hlsearch
-
-set incsearch
+set hlsearch  " 高亮搜索
+set incsearch " 搜索大小写忽略
 
 "修改后，自动备份，~结尾文件
 "if has('vms')
@@ -53,8 +46,7 @@ set nobackup
 set nowritebackup
 
 
-"不自动换行 
-set nowrap 
+set nowrap "不自动换行 
 "设置超过120字符自动换行 
 "set textwidth=120 
 "设置超过100列的字符带下划线 "au BufWinEnter * let w:m2=matchadd('Underlined', '\%>120v.\+', -1) 
@@ -117,14 +109,11 @@ function! ShortTabLabel ()
   let filename = fnamemodify (label, ':t')
   return filename
 endfunction
-
 set guitablabel=%{ShortTabLabel()}
 
 
-"Change work dir to current dir
-"移动工作目录到当前目录
-autocmd BufEnter * cd %:p:h
-
+autocmd BufEnter * cd %:p:h " 移动工作目录到当前文件所在目录
+                            "Change work dir to current dir
 
 " shift tab pages
 " 映射标签前后移动键
@@ -132,42 +121,36 @@ map <S-Left> :tabp<CR>
 map <S-Right> :tabn<CR>
 
 
-"F7单独切换打开nerd_tree（nerd_tree插件） 
-let g:NERDChristmasTree = 1              "色彩显示 
-"let g:NERDTreeShowHidden = 1             "显示隐藏文件 
-let g:NERDTreeWinPos = 'left'            "窗口显示位置 
-let g:NERDTreeHighlightCursorline = 1    "高亮当前行 
-"let NERDTreeShowBookmarks=1
-let NERDTreeWinPos='right'
-"au VimEnter *  NERDTree " 自动打开 NERDTree
-"nmap <F7>  :TrinityToggleNERDTree<CR> 
+let g:NERDChristmasTree           = 1             " 色彩显示
+"let g:NERDTreeShowHidden          = 1             " 显示隐藏文件
+let g:NERDTreeWinPos              = 'left'        " 窗口显示位置
+let g:NERDTreeHighlightCursorline = 1             " 高亮当前行
+let NERDTreeShowBookmarks         = 1             " 显示bookmarks
+let NERDTreeWinPos                = 'right'       " 窗体位置
+au VimEnter *  NERDTree                           " 自动打开 NERDTree
+nmap <F7>  :TrinityToggleNERDTree<CR>
+                                                  " F7单独切换打开nerd_tree（nerd_tree插件）
 
 
 
-"设置命令行的高度 
-set cmdheight=3 
+set cmdheight=3 "设置命令行的高度 
 
-"行高亮 
-set cursorline 
-"列高亮，与函数列表有冲突 
-"set cursorcolumn 
+set cursorline "行高亮 
+"set cursorcolumn "列高亮，与函数列表有冲突 
 
-"显示中文引号 
-set ambiwidth=double
+set ambiwidth=double "显示中文引号 
 
 
 """"""""""""""""""""""""""""""
 " showmarks setting
 """"""""""""""""""""""""""""""
-" Enable ShowMarks
-let showmarks_enable = 1
-" Show which marks
-let showmarks_include = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-" Ignore help, quickfix, non-modifiable buffers
-let showmarks_ignore_type = "hqm"
-" Hilight lower & upper marks
-let showmarks_hlline_lower = 1
-let showmarks_hlline_upper = 1 
+let showmarks_enable       = 1 " Enable ShowMarks
+let showmarks_include      = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" 
+                               " Show which marks
+let showmarks_ignore_type  = "hqm"
+                               " Ignore help, quickfix, non-modifiable buffers
+let showmarks_hlline_lower = 1 " Hilight lower & upper marks
+let showmarks_hlline_upper = 1
 
 " For showmarks plugin
 hi ShowMarksHLl ctermbg=Yellow   ctermfg=Black  guibg=#FFDB72    guifg=Black
@@ -298,3 +281,8 @@ autocmd BufNewFile,Bufread *.module,*.inc,*.php set keywordprg="help"
 
 "插入模式下打印当前时间
 ino <C-E><C-D> <C-R>=strftime('%Y-%m-%d %H:%M:%S')<CR>
+
+autocmd BufNewFile,Bufread * set fileformat=unix
+"au VimEnter * SessionOpen default 
+au VimLeavePre * SessionSaveAs default
+map <M-b> <Esc>:Bp<CR>

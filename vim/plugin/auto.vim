@@ -13,10 +13,10 @@ im  ;; <ESC>
 im ,, <ESC>:w<CR>
 map<Up>   gk
 map<Down> gj
-no!<M-k> <Up>
-no!<M-j> <Down>
-no!<M-h> <Left>
-no!<M-l> <Right>
+imap <C-k> <Up>
+imap <C-j> <Down>
+imap <C-h> <Left>
+imap <C-l> <Right>
 "nm<silent> ;; :q!<CR>
 map ,, <Esc>:w<CR>
 au BufRead,BufNewFile *.html setf html
