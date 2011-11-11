@@ -1,13 +1,33 @@
 " calutil.vim: some calendar utilities
 " Author:	Charles E. Campbell, Jr.
-" Date:		Oct 19, 2007
-" Version:	3a	ASTRO-ONLY
+" Date:		Oct 08, 2008
+" Version:	3b	ASTRO-ONLY
 " ---------------------------------------------------------------------
 if exists("loaded_calutil")
  finish
 endif
-let g:loaded_calutil= "v3a"
+let g:loaded_calutil= "v3b"
+if v:version < 700
+ echohl WarningMsg
+ echo "***warning*** this version of calutil needs vim 7.0"
+ echohl Normal
+ finish
+endif
 
+function! calutil#dayname(date)
+	return calutil#DayOfWeek(split(a:date,'-')[0],split(a:date,'-')[1],split(a:date,'-')[2],2)
+endfunction
+function! calutil#dow(date)
+	return calutil#DayOfWeek(split(a:date,'-')[0],split(a:date,'-')[1],split(a:date,'-')[2],1)
+endfunction
+
+function! calutil#jul(date)
+	return calutil#Cal2Jul(split(a:date,'-')[0],split(a:date,'-')[1],split(a:date,'-')[2])
+endfunction
+
+function! calutil#cal(julian)
+		return calutil#Jul2Cal(a:julian)
+endfunction
 " ---------------------------------------------------------------------
 " DayOfWeek: {{{1
 " Usage :  call calutil#DayOfWeek(y,m,d,[0|1|2])
@@ -25,7 +45,7 @@ fun! calutil#DayOfWeek(y,m,d,...)
    let g:CalUtilDayOfWeek= a:1
   endif
 
-  let z= Cal2Jul(a:y,a:m,a:d)
+  let z = calutil#Cal2Jul(a:y,a:m,a:d)
   if z >= 0
    let z= z%7
   else
@@ -127,21 +147,25 @@ fun! calutil#Jul2Cal(julday,...)
    let month = (mo + 2 - 12*t1)
    let year  = (100*(t2 - 49) + yr + t1)
   endif
+  
+  let month = (month<10) ? '0' . month : month
+  let day = (day < 10) ? '0' . day : day
 
   if a:0 > 0
    if a:1 == 1 || a:1 =~ "ymd"
-    return year."/".month."/".day
+    return year."-".month."/".day
    elseif a:1 == 2 || a:1 =~ "mdy"
-    return month."/".day."/".year
+    return month."-".day."/".year
    elseif a:1 == 3 || a:1 =~ "dmy"
-    return day."/".month."/".year
+    return day."-".month."/".year
    else
-    return year."/".month."/".day
+    return year."-".month."/".day
    endif
   else
-   return year."/".month."/".day
+   return year."-".month."-".day
   endif
 endfun
 
 " ---------------------------------------------------------------------
 " vim: ts=4 fdm=marker
+

@@ -16,6 +16,8 @@ snippet req1
 # $GLOBALS['...']
 snippet globals
 	$GLOBALS['${1:variable}']${2: = }${3:something}${4:;}${5}
+snippet $va
+	$${1:var}[${2:variable}]${3: = }${4:something}${5:;}${6}
 snippet $_ COOKIE['...']
 	$_COOKIE['${1:variable}']${2}
 snippet $_ ENV['...']
@@ -215,7 +217,7 @@ snippet foreach
 		${3:// code...}
 	}
 snippet fun
-	${1:public }function ${2:FunctionName}(${3})
+	${1:public} function ${2:FunctionName}(${3})
 	{
 		${4:// code...}
 	}

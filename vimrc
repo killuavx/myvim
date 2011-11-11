@@ -17,11 +17,11 @@ set tabstop=2     " 空格数量为4
 set shiftwidth=2  " 自动缩进为4
 set softtabstop=2 " 退格删除2空格
 set expandtab     " 使用空格代替Tab
-                  " set smartindent          " 智能对齐方式
+                " set smartindent          " 智能对齐方式
 set showmatch     " 设置匹配模式， 类似当输入一个左括号时匹配右括号
 
 set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v]\ [%p%%]\ [LEN=%L]
-                  "Add more information on status bar
+                "Add more information on status bar
 set laststatus=2  "Always show the status line
 
 set ignorecase " case insensitive search
@@ -100,25 +100,27 @@ source $VIMRUNTIME/menu.vim
 " 针对Windows的字体配置
 "set guifont=Courier\ New:h10:cANSI
 au GUIEnter * simalt ~x "最大化窗口
+au GUIEnter * colo wombat "设置GUI下的颜色主题
 
 
 "标签页只显示文件名
 function! ShortTabLabel ()
-  let bufnrlist = tabpagebuflist (v:lnum)
-  let label = bufname (bufnrlist[tabpagewinnr (v:lnum) -1])
-  let filename = fnamemodify (label, ':t')
-  return filename
+let bufnrlist = tabpagebuflist (v:lnum)
+let label = bufname (bufnrlist[tabpagewinnr (v:lnum) -1])
+let filename = fnamemodify (label, ':t')
+return filename
 endfunction
 set guitablabel=%{ShortTabLabel()}
 
 
 autocmd BufEnter * cd %:p:h " 移动工作目录到当前文件所在目录
-                            "Change work dir to current dir
+                          "Change work dir to current dir
 
 " shift tab pages
 " 映射标签前后移动键
 map <S-Left> :tabp<CR>
 map <S-Right> :tabn<CR>
+" Ctrl tab pages
 
 
 let g:NERDChristmasTree           = 1             " 色彩显示
@@ -277,7 +279,6 @@ let g:debuggerPort=9001
 
 set guifont=Monaco\ 9
 
-autocmd BufNewFile,Bufread *.module,*.inc,*.php set keywordprg="help"
 
 "插入模式下打印当前时间
 ino <C-E><C-D> <C-R>=strftime('%Y-%m-%d %H:%M:%S')<CR>
@@ -286,3 +287,11 @@ autocmd BufNewFile,Bufread * set fileformat=unix
 "au VimEnter * SessionOpen default 
 au VimLeavePre * SessionSaveAs default
 map <M-b> <Esc>:Bp<CR>
+
+let g:vimim_custom_color=1
+let g:vimim_cloud='qq.pinyin.flypy'
+let g:vimim_curor_color='purple'
+
+"autocmd! BufNewFile,Bufread *.module,*.inc,*.php set keywordprg="help"
+autocmd FileType php set runtimepath+=~/.vim/ftplugin/php/phpdoc/doc/
+autocmd FileType php set keywordprg="help" 
