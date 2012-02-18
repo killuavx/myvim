@@ -232,7 +232,7 @@ endif
 set mouse=a
 
 "set listchars=tab:\|\ ,trail:.,extends:>,precedes:<
-set listchars=extends:>,precedes:<
+"set listchars=extends:>,precedes:<
 "显示尾行标示
 set list
 "显示尾行空格
@@ -295,3 +295,39 @@ let g:vimim_curor_color='purple'
 "autocmd! BufNewFile,Bufread *.module,*.inc,*.php set keywordprg="help"
 autocmd FileType php set runtimepath+=~/.vim/ftplugin/php/phpdoc/doc/
 autocmd FileType php set keywordprg="help" 
+
+"快捷按键
+"普通模式下 回车换行
+nmap <CR> a<CR><Esc>
+"普通模式下的tab缩进
+nmap <tab> v>
+nmap <s-tab> v<
+"可视模式下的tab缩进
+vmap <tab> >gv
+vmap <s-tab> <gv
+
+cmap <c-a> <home>
+cmap <c-e> <end>
+cnoremap <c-b> <left>
+cnoremap <c-d> <del>
+cnoremap <c-f> <right>
+cnoremap <c-n> <down>
+cnoremap <c-p> <up>
+
+cnoremap <Esc><c-b> <s-left>
+cnoremap <Esc><c-f> <s-right>
+
+"autocmd BufWinLeave *.* silent mkview
+"autocmd BufWinEnter *.* silent loadview
+autocmd BufLeave *.* silent mkview
+autocmd BufEnter *.* silent loadview
+
+set grepprg=/usr/local/share/nginx/www/market2
+
+let g:pydiction_location = '~/.vim/after/ftplugin/pydiction/complete-dict'
+let g:pydiction_menu_height = 20
+language C
+
+
+hi Indention guibg=#FF0000
+match Indention /\(^\s\+\)\@<=\s\{1}\(\w\)\@=/

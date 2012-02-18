@@ -35,12 +35,12 @@ func Cp()
   ino && <SPACE>&&<SPACE>
 
   imap {<CR> {<CR>}<Up><End><CR>
-  imap (<Space> ()<Left>
-  imap (<Tab> ()
-  imap "<Tab> ""<Left>
-  imap '<Tab> ''<Left> 
-  imap [<Tab> []<Left>
-  imap [<Space> []
+  "imap (<Space> ()<Left>
+  "imap (<Tab> ()
+  "imap "<Tab> ""<Left>
+  "imap '<Tab> ''<Left> 
+  "imap [<Tab> []<Left>
+  "imap [<Space> []
 endf
 func Py()
   "nm mm :call Ct()<CR>
