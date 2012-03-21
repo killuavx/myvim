@@ -1,6 +1,6 @@
-
 function! RunPhpcs()
     let l:filename=@%
+    "let l:phpcs_output=system('phpcs --report=csv --standard=YMC '.l:filename)
     let l:phpcs_output=system('phpcs --report=csv --standard=YMC '.l:filename)
      echo l:phpcs_output
     let l:phpcs_list=split(l:phpcs_output, "\n")
@@ -10,4 +10,5 @@ function! RunPhpcs()
 endfunction
 set errorformat+=\"%f\"\\,%l\\,%c\\,%t%*[a-zA-Z]\\,\"%m\"
 
+"autocmd BufWritePost *.php call RunPhpcs()
 command! Phpcs execute RunPhpcs()

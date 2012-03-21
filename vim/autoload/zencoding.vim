@@ -1,7 +1,7 @@
 "=============================================================================
 " zencoding.vim
 " Author: Yasuhiro Matsumoto <mattn.jp@gmail.com>
-" Last Change: 25-Jan-2011.
+" Last Change: 22-Nov-2011.
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -62,7 +62,13 @@ function! s:zen_parseIntoTree(abbr, type)
   endif
 
   if s:zen_isExtends(type, "html")
-    let abbr = substitute(abbr, '\([a-zA-Z][a-zA-Z0-9]*\)+\([()]\|$\)', '\="(".s:zen_getExpandos(type, submatch(1)).")".submatch(2)', 'i')
+    " try 'foo' to (foo-x)
+    let rabbr = s:zen_getExpandos(type, abbr)
+    if rabbr == abbr
+      " try 'foo+(' to (foo-x)
+      let rabbr = substitute(abbr, '\([a-zA-Z][a-zA-Z0-9+]*\)+\([()]\|$\)', '\="(".s:zen_getExpandos(type, submatch(1)).")".submatch(2)', 'i')
+    endif
+    let abbr = rabbr
     let mx = '\([+>]\|<\+\)\{-}\s*\((*\)\{-}\s*\([@#.]\{-}[a-zA-Z\!][a-zA-Z0-9:\!\-]*\|{[^}]\+}\)\(\%(\%(#{[{}a-zA-Z0-9_\-\$]\+\|#[a-zA-Z0-9_\-\$]\+\)\|\%(\[[^\]]\+\]\)\|\%(\.{[{}a-zA-Z0-9_\-\$]\+\|\.[a-zA-Z0-9_\-\$]\+\)\)*\)\%(\({[^}]\+}\)\)\{0,1}\%(\s*\*\s*\([0-9]\+\)\s*\)\{0,1}\(\%(\s*)\%(\s*\*\s*[0-9]\+\s*\)\{0,1}\)*\)'
   else
     let mx = '\([+>]\|<\+\)\{-}\s*\((*\)\{-}\s*\([@#.]\{-}[a-zA-Z\!][a-zA-Z0-9:\!\+\-]*\|{[^}]\+}\)\(\%(\%(#{[{}a-zA-Z0-9_\-\$]\+\|#[a-zA-Z0-9_\-\$]\+\)\|\%(\[[^\]]\+\]\)\|\%(\.{[{}a-zA-Z0-9_\-\$]\+\|\.[a-zA-Z0-9_\-\$]\+\)\)*\)\%(\({[^}]\+}\)\)\{0,1}\%(\s*\*\s*\([0-9]\+\)\s*\)\{0,1}\(\%(\s*)\%(\s*\*\s*[0-9]\+\s*\)\{0,1}\)*\)'
@@ -317,6 +323,10 @@ function! s:zen_mergeConfig(lhs, rhs)
 endfunction
 
 
+function! s:zen_toString_sass(settings, current, type, inline, filters, itemno, indent)
+  return 'sassed'
+endfunction
+
 function! s:zen_toString_haml(settings, current, type, inline, filters, itemno, indent)
   let settings = a:settings
   let current = a:current
@@ -335,7 +345,7 @@ function! s:zen_toString_haml(settings, current, type, inline, filters, itemno, 
     for attr in keys(current.attr)
       let val = current.attr[attr]
       if current.multiplier > 1
-        while val =~ '\$\([^{]\|$\)'
+        while val =~ '\$\([^#{]\|$\)'
           let val = substitute(val, '\(\$\+\)\([^{]\|$\)', '\=printf("%0".len(submatch(1))."d", itemno+1).submatch(2)', 'g')
         endwhile
       endif
@@ -404,7 +414,7 @@ function! s:zen_toString_html(settings, current, type, inline, filters, itemno, 
     endif
     let val = current.attr[attr]
     if current.multiplier > 1
-      while val =~ '\$\([^{]\|$\)'
+      while val =~ '\$\([^#{]\|$\)'
         let val = substitute(val, '\(\$\+\)\([^{]\|$\)', '\=printf("%0".len(submatch(1))."d", itemno+1).submatch(2)', 'g')
       endwhile
     endif
@@ -440,9 +450,13 @@ function! s:zen_toString_html(settings, current, type, inline, filters, itemno, 
   elseif len(current.child)
     if inline == 0
       if stridx(','.settings.html.inline_elements.',', ','.current.name.',') == -1
-        let inner = substitute(inner, "\n", "\n" . indent, 'g')
-        let inner = substitute(inner, indent . "$", "", 'g')
-        let str .= ">\n" . indent . inner . "</" . current.name . ">\n"
+        if inner =~ "\n$"
+          let inner = substitute(inner, "\n", "\n" . indent, 'g')
+          let inner = substitute(inner, indent . "$", "", 'g')
+          let str .= ">\n" . indent . inner . "</" . current.name . ">\n"
+        else
+          let str .= ">\n" . indent . inner . indent . "\n</" . current.name . ">\n"
+        endif
       else
         let str .= ">" . inner . "</" . current.name . ">\n"
       endif
@@ -509,13 +523,18 @@ function! s:zen_toString(...)
   let str = ''
   while itemno < current.multiplier
     if len(current.name)
+      let inner = ''
       if exists('*g:zen_toString_'.type)
-        let str .= function('g:zen_toString_'.type)(s:zen_settings, current, type, inline, filters, itemno, indent)
+        let inner = function('g:zen_toString_'.type)(s:zen_settings, current, type, inline, filters, itemno, indent)
       elseif s:zen_useFilter(filters, 'haml')
-        let str .= s:zen_toString_haml(s:zen_settings, current, type, inline, filters, itemno, indent)
+        let inner = s:zen_toString_haml(s:zen_settings, current, type, inline, filters, itemno, indent)
       else
-        let str .= s:zen_toString_html(s:zen_settings, current, type, inline, filters, itemno, indent)
+        let inner = s:zen_toString_html(s:zen_settings, current, type, inline, filters, itemno, indent)
       endif
+      if current.multiplier > 1
+        let inner = substitute(inner, '\$#', '$line'.(itemno+1).'$', 'g')
+      endif
+      let str .= inner
     else
       let snippet = current.snippet
       if len(current.snippet) == 0
@@ -529,6 +548,9 @@ function! s:zen_toString(...)
         let tmp = substitute(tmp, '\${zenname}', current.name, 'g')
         if type == 'css' && s:zen_useFilter(filters, 'fc')
           let tmp = substitute(tmp, '^\([^:]\+\):\(.*\)$', '\1: \2', '')
+        endif
+        if type == 'sass' && s:zen_useFilter(filters, 'sass')
+          let tmp = substitute(tmp, '^\([^:]\+\):\([^;]*\);$', '\1: \2', '')
         endif
         for attr in keys(current.attr)
           let val = current.attr[attr]
@@ -591,6 +613,9 @@ endfunction
 function! s:zen_getFileType()
   let type = &ft
   if type == 'xslt' | let type = 'xsl' | endif
+  if type == 'htmldjango' | let type = 'html' | endif
+  if type == 'html.django_template' | let type = 'html' | endif
+  if type == 'scss' | let type = 'css' | endif
   if synIDattr(synID(line("."), col("."), 1), "name") =~ '^css'
     let type = 'css'
   endif
@@ -624,13 +649,16 @@ function! zencoding#expandAbbr(mode) range
     if len(leader) == 0
       return
     endif
-    let mx = '|\(\%(html\|haml\|e\|c\|fc\|xsl\)\s*,\{0,1}\s*\)*$'
+    let mx = '|\(\%(sass\|html\|haml\|e\|c\|fc\|xsl\)\s*,\{0,1}\s*\)*$'
     if leader =~ mx
       let filters = split(matchstr(leader, mx)[1:], '\s*,\s*')
       let leader = substitute(leader, mx, '', '')
     endif
     if leader =~ '\*'
-      let query = substitute(leader, '*', '*' . (a:lastline - a:firstline + 1), '') . '>{$line$}'
+      let query = substitute(leader, '*', '*' . (a:lastline - a:firstline + 1), '')
+      if query !~ '}\s*$'
+        let query .= '>{$#}'
+      endif
       let items = s:zen_parseIntoTree(query, type).child
       for item in items
         let expand .= s:zen_toString(item, type, 0, filters)
@@ -640,11 +668,9 @@ function! zencoding#expandAbbr(mode) range
       for n in range(a:firstline, a:lastline)
         let lline = getline(n)
         let lpart = substitute(lline, '^\s*', '', '')
-        let pos = stridx(expand, "$line$")
-        if pos != -1
-          let expand = expand[:pos-1] . lpart . expand[pos+6:]
-        endif
+        let expand = substitute(expand, '\$line'.(n-a:firstline+1).'\$', lpart, 'g')
       endfor
+      let expand = substitute(expand, '\$line\d*\$', '', 'g')
     else
       let str = ''
       if a:firstline != a:lastline
@@ -684,10 +710,17 @@ function! zencoding#expandAbbr(mode) range
       let part = matchstr(line, '\([a-zA-Z0-9_\@:|]\+\)$')
     else
       let part = matchstr(line, '\(\S.*\)$')
+      if s:zen_isExtends(type, "html")
+        while part =~ '<.\{-}>'
+          let part = substitute(part, '^.*<.\{-}>', '', '')
+        endwhile
+      elseif s:zen_isExtends(type, "css")
+        let part = substitute(part, '^.*[;{]\s*', '', '')
+      endif
     endif
     let rest = getline('.')[len(line):]
     let str = part
-    let mx = '|\(\%(html\|haml\|e\|c\|fc\|xsl\)\s*,\{0,1}\s*\)*$'
+    let mx = '|\(\%(sass\|html\|haml\|e\|c\|fc\|xsl\)\s*,\{0,1}\s*\)*$'
     if str =~ mx
       let filters = split(matchstr(str, mx)[1:], '\s*,\s*')
       let str = substitute(str, mx, '', '')
@@ -768,7 +801,7 @@ function! zencoding#imageSize()
   if filereadable(fn)
     let hex = substitute(system('xxd -p "'.fn.'"'), '\n', '', 'g')
   else
-    let hex = substitute(system('curl -s "'.fn.'" | xxd -p'), '\n', '', 'g')
+    let hex = substitute(system(g:zencoding_curl_command.' "'.fn.'" | xxd -p'), '\n', '', 'g')
   endif
 
   if hex =~ '^89504e470d0a1a0a'
@@ -1037,11 +1070,15 @@ function! zencoding#anchorizeURL(flag)
     return
   endif
 
-  let content = s:get_content_from_url(url)
-  let content = substitute(content, '\n', '', 'g')
-  let content = substitute(content, '\n\s*\n', '\n', 'g')
-  let head = strpart(content, 0, stridx(content, '</head>'))
-  let title = substitute(head, '.*<title[^>]*>\([^<]\+\)<\/title[^>]*>.*', '\1', 'g')
+  let mx = '.*<title[^>]*>\s*\zs\([^<]\+\)\ze\s*<\/title[^>]*>.*'
+  let content = s:get_content_from_url(url, 0)
+  if len(matchstr(content, mx)) == 0
+    let content = s:get_content_from_url(url, 1)
+  endif
+  let content = substitute(content, '\r', '', 'g')
+  let content = substitute(content, '[ \n]\+', ' ', 'g')
+  let content = substitute(content, '<!--.\{-}-->', '', 'g')
+  let title = matchstr(content, mx)
 
   if a:flag == 0
     let a = s:zen_parseTag('<a>')
@@ -1076,9 +1113,13 @@ endfunction
 "==============================================================================
 " html utils
 "==============================================================================
-function! s:get_content_from_url(url)
+function! s:get_content_from_url(url, utf8)
   silent! new
-  silent! exec '0r!curl -s -L "'.substitute(a:url, '#.*', '', '').'"'
+  if a:utf8
+    silent! exec '0r ++enc=utf8 !'.g:zencoding_curl_command.' "'.substitute(a:url, '#.*', '', '').'"'
+  else
+    silent! exec '0r!'.g:zencoding_curl_command.' "'.substitute(a:url, '#.*', '', '').'"'
+  endif
   let ret = join(getline(1, '$'), "\n")
   silent! bw!
   return ret
@@ -1089,7 +1130,6 @@ function! s:get_text_from_html(buf)
   let threshold_per = 0.1
   let buf = a:buf
 
-  let buf = substitute(buf, '<!--.\{-}-->', '', 'g')
   let buf = strpart(buf, stridx(buf, '</head>'))
   let buf = substitute(buf, '<style[^>]*>.\{-}</style>', '', 'g')
   let buf = substitute(buf, '<script[^>]*>.\{-}</script>', '', 'g')
@@ -1099,7 +1139,7 @@ function! s:get_text_from_html(buf)
   let m = split(buf, mx)
   for str in m
     let c = split(str, '<[^>]*?>')
-    let str = substitute(str, '<[^>]\{-}>', '', 'g')
+    let str = substitute(str, '<[^>]\{-}>', ' ', 'g')
     let str = substitute(str, '&gt;', '>', 'g')
     let str = substitute(str, '&lt;', '<', 'g')
     let str = substitute(str, '&quot;', '"', 'g')
@@ -1111,10 +1151,10 @@ function! s:get_text_from_html(buf)
     let str = substitute(str, '\s\+', ' ', 'g')
     let l = len(str)
     if l > threshold_len
-      let per = len(c) / l
-      if max < l && per < threshold_per
-          let max = l
-          let res = str
+      let per = (l+0.0) / len(c)
+      if max < l && per > threshold_per
+        let max = l
+        let res = str
       endif
     endif
   endfor
@@ -1268,7 +1308,7 @@ endfunction
 "==============================================================================
 
 function! zencoding#ExpandWord(abbr, type, orig)
-  let mx = '|\(\%(html\|haml\|e\|c\|fc\|xsl\)\s*,\{0,1}\s*\)*$'
+  let mx = '|\(\%(sass\|html\|haml\|e\|c\|fc\|xsl\)\s*,\{0,1}\s*\)*$'
   let str = a:abbr
   let type = a:type
 
@@ -1546,11 +1586,13 @@ let s:zen_settings = {
 \            'bdls': 'border-left-style:|;',
 \            'bdls:n': 'border-left-style:none;',
 \            'bdlc': 'border-left-color:#000;',
-\            'bdrus': 'border-radius:|;',
-\            'bdtrrs': 'border-top-right-radius:|;',
-\            'bdtlrs': 'border-top-left-radius:|;',
-\            'bdbrrs': 'border-bottom-right-radius:|;',
-\            'bdblrs': 'border-bottom-left-radius:|;',
+\            'bdrz': 'border-radius:|;',
+\            'bdtrrz': 'border-top-right-radius:|;',
+\            'bdtlrz': 'border-top-left-radius:|;',
+\            'bdbrrz': 'border-bottom-right-radius:|;',
+\            'bdblrz': 'border-bottom-left-radius:|;',
+\            'bdrz:w': '-webkit-border-radius:|;',
+\            'bdrz:m': '-moz-border-radius:|;',
 \            'bg': 'background:|;',
 \            'bg+': 'background:#FFF url(|) 0 0 no-repeat;',
 \            'bg:n': 'background:none;',
@@ -1800,7 +1842,8 @@ let s:zen_settings = {
 \            'pgba:r': 'page-break-after:right;',
 \            'orp': 'orphans:|;',
 \            'wid': 'widows:|;'
-\        }
+\        },
+\        'filters': 'fc'
 \    },
 \    'html': {
 \        'snippets': {
@@ -2045,6 +2088,15 @@ let s:zen_settings = {
 \    },
 \    'mustache': {
 \        'extends': 'html'
+\    },
+\    'xsd': {
+\        'extends': 'html',
+\        'snippets': {
+\            'xsd:w3c': "<?xml version=\"1.0\"?>\n"
+\                    ."<xsd:schema xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
+\                    ."    <xsd:element name=\"\" type=\"\"/>\n"
+\                    ."</xsd:schema>\n"
+\        }
 \    }
 \}
 

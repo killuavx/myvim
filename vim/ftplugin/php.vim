@@ -1,7 +1,17 @@
 "exec 'set runtimepath+=~/.vim/ftplugin/php'
+"autocmd! BufNewFile,Bufread *.module,*.inc,*.php set keywordprg="help"
+autocmd FileType php set keywordprg="help" 
 autocmd FileType php setl fdm=syntax | setl fen 
-autocmd FileType php set omnifunc=phpcomplete
-
+"autocmd FileType php set runtimepath+=$HOME/.vim/ftplugin/php/doc/php-manual
+autocmd FileType php set omnifunc=syntaxcomplete
+"autocmd FileType php set omnifunc=phpcomplete
+:so $HOME/.vim/ftplugin/php/plugin/debugger.vim
+:so $HOME/.vim/ftplugin/php/plugin/phpcs.vim
+map <F4> <Esc>:call CheckPHPSyntax()<CR> 
+" for PHP ctags
+"set tags+=$HOME/.vim/ftplugin/php/doc"
+"set tags+=$HOME/.vim/ftplugin/php/doc/php-manual/tags
+"
 "PHP语法检查 
 "map <F4> :!php-cgi -l %<CR> 
 function! CheckPHPSyntax() 
@@ -12,31 +22,9 @@ function! CheckPHPSyntax()
     make % 
 endfunction 
 " Perform :PHP_CheckSyntax() 
-map <F4> <Esc>:call CheckPHPSyntax()<CR> 
-
 
 "vim + xdebug + debugger 
 "vim port设置
 let g:debuggerPort=9001
 let g:debuggerMaxDepth=3
-
-" for PHP ctags
-"set tags+=$HOME/.vim/ftplugin/php/doc"
-"set tags+=$HOME/.vim/ftplugin/php/doc/php-manual/tags
-"set runtimepath+=$HOME/.vim/ftplugin/php/doc/php-manual
-
-function! RunPhpcs()
-  let l:filename=@%
-  "let l:phpcs_output=system('phpcs --report=csv --standard=YMC '.l:filename)
-  let l:phpcs_output=system('phpcs --report=csv '.l:filename)
-  echo l:phpcs_output
-  let l:phpcs_list=split(l:phpcs_output, "\n")
-  unlet l:phpcs_list[0]
-  cexpr l:phpcs_list
-  cwindow
-endfunction
-set errorformat+=\"%f\"\\,%l\\,%c\\,%t%*[a-zA-Z]\\,\"%m\"
-
-"autocmd BufWritePost *.php call RunPhpcs()
-command! Phpcs execute RunPhpcs()
-
+map <M-b> <Esc>:Bp<CR>

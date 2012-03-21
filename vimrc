@@ -286,15 +286,11 @@ ino <C-E><C-D> <C-R>=strftime('%Y-%m-%d %H:%M:%S')<CR>
 autocmd BufNewFile,Bufread * set fileformat=unix
 "au VimEnter * SessionOpen default 
 au VimLeavePre * SessionSaveAs default
-map <M-b> <Esc>:Bp<CR>
 
 let g:vimim_custom_color=1
 let g:vimim_cloud='qq.pinyin.flypy'
 let g:vimim_curor_color='purple'
 
-"autocmd! BufNewFile,Bufread *.module,*.inc,*.php set keywordprg="help"
-autocmd FileType php set runtimepath+=~/.vim/ftplugin/php/phpdoc/doc/
-autocmd FileType php set keywordprg="help" 
 
 "快捷按键
 "普通模式下 回车换行
@@ -324,10 +320,22 @@ autocmd BufEnter *.* silent loadview
 
 set grepprg=/usr/local/share/nginx/www/market2
 
-let g:pydiction_location = '~/.vim/after/ftplugin/pydiction/complete-dict'
-let g:pydiction_menu_height = 20
+"let g:pydiction_location = '~/.vim/after/ftplugin/pydiction/complete-dict'
+"let g:pydiction_menu_height = 20
 language C
 
 
 hi Indention guibg=#FF0000
 match Indention /\(^\s\+\)\@<=\s\{1}\(\w\)\@=/
+
+" tasklist
+let g:tlRememberPosition = 1
+" open on the buttom
+let g:tlWindowPosition = 1
+
+" MiniBufExpl
+"let g:miniBufExplMapWindowNavVim = 1
+"let g:miniBufExplMapWindowNavArrows = 1
+"let g:miniBufExplMapCTabSwitchBufs = 1
+"let g:miniBufExplModSelTarget = 1
+let loaded_minibufexplorer = 1
