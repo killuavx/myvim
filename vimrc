@@ -120,6 +120,8 @@ autocmd BufEnter * cd %:p:h " 移动工作目录到当前文件所在目录
 " 映射标签前后移动键
 map <S-Left> :tabp<CR>
 map <S-Right> :tabn<CR>
+"map <C-.> <S-Right>
+"map <C-,> <S-Right>
 " Ctrl tab pages
 
 
@@ -263,6 +265,7 @@ nnoremap <leader>ft :FufTag<CR>
 let g:acp_enableAtStartup = 0
 
 au BufRead,BufNewFile /etc/nginx/* set ft=nginx
+autocmd BufRead,BufNewFile *.qml setfiletype qml
 
 let php_folding=1
 "let php_folding=1
@@ -287,14 +290,14 @@ autocmd BufNewFile,Bufread * set fileformat=unix
 "au VimEnter * SessionOpen default 
 au VimLeavePre * SessionSaveAs default
 
-let g:vimim_custom_color=1
-let g:vimim_cloud='qq.pinyin.flypy'
-let g:vimim_curor_color='purple'
-
+"let g:vimim_custom_color=1
+"let g:vimim_cloud='qq.pinyin.flypy'
+"let g:vimim_curor_color='purple'
+let b:vimim=1
 
 "快捷按键
 "普通模式下 回车换行
-nmap <CR> a<CR><Esc>
+"nmap <CR> a<CR><Esc>
 "普通模式下的tab缩进
 nmap <tab> v>
 nmap <s-tab> v<
@@ -320,10 +323,7 @@ autocmd BufEnter *.* silent loadview
 
 set grepprg=/usr/local/share/nginx/www/market2
 
-"let g:pydiction_location = '~/.vim/after/ftplugin/pydiction/complete-dict'
-"let g:pydiction_menu_height = 20
 language C
-
 
 hi Indention guibg=#FF0000
 match Indention /\(^\s\+\)\@<=\s\{1}\(\w\)\@=/
@@ -339,3 +339,11 @@ let g:tlWindowPosition = 1
 "let g:miniBufExplMapCTabSwitchBufs = 1
 "let g:miniBufExplModSelTarget = 1
 let loaded_minibufexplorer = 1
+"call pathogen#runtime_append_all_bundles(vimpyre)
+map <leader>at :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+
+
+" SuperTab
+"let g:SuperTabMappingForward='<c-/>'
+
+
