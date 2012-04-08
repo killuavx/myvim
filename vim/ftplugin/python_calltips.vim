@@ -39,12 +39,38 @@
 "    English is not my native language, so there may be many mistakes of expression.
 "    If you have any question, feel free to mail to write2tocer@hotmail.com
 "    If you enjoy it, mail me too, I'm happy to share your joy.
+"
+"
+"Comment By User
+"   In newer versions of the plugin, refresh key is not needed.
+"   
+"   Fix bug "when using <BS> to delete the whole word", edit python calltips on line 169 to:
+"   
+"       try:
+"         docs = CT_GetHelpDoc(CT_GetWordUnderCursor())
+"       except AttributeError:
+"         return
+"   
+"   Also to disable warnings (which triggeres vim.error) include this line somewhere at the begining:
+"   
+"       import warnings
+"       warnings.simplefilter('ignore')
+"   
+"   There is another bug in the script above with <BS> and empty lines. Use the following code instead
+"   
+"       try:
+"         docs = CT_GetHelpDoc(CT_GetWordUnderCursor())
+"       except AttributeError:
+"         docs = []
+"
+"
 
 if exists("g:loaded_python_calltips") && g:loaded_python_calltips==1
   finish
 endif
 let g:loaded_python_calltips = 1
 let s:MenuBuilt = 0
+
 
 "If you don't want to auto start calltips while first loaded, let s:FirstStart=0 
 let s:FirstStart = 0
@@ -166,7 +192,11 @@ def CT_DspTips():
     if not CT_ExistTipsWin():
         CT_CreateTipsWin()
     tips_buffer[:] = None
-    docs = CT_GetHelpDoc(CT_GetWordUnderCursor())
+    try:
+        docs = CT_GetHelpDoc(CT_GetWordUnderCursor())
+    except AttributeError:
+        docs = []
+        return
 
     #print docs
     for line in docs:
